@@ -1,0 +1,110 @@
+﻿@page
+@model DeanH_ASPNETCore_MovieListing.Pages.Movies.IndexModel
+
+@{
+    ViewData["Title"] = "Films Listing";
+}
+
+<h1>Films Listing</h1>
+
+<p>
+    <a asp-page="Create">Create New Film Entry</a>
+</p>
+ 
+<form>
+    <p>
+        Movie Genre : <select asp-for="MovieGenre" asp-items="Model.Genres">
+            <option value="">All</option>
+        </select>
+        <br />
+        StartDate: <input type="date" id="startDate" asp-for="StartDate" />
+        <br />
+            EndDate: <input type="date" id="endDate" asp-for="EndDate" />
+        <br />
+        Movie Age Rating :
+        <select asp-for="AgeRating" asp-items="Model.Rating">
+            <option value="">All</option>
+        </select>
+        <br />
+        Title: <input type="text" asp-for="SearchString" />
+
+        <input type="submit" value="Filter" /> 
+    </p> 
+    <br />
+
+    <input type="hidden" asp-for="SearchString" />
+    <input type="hidden" asp-for="MovieGenre" />
+    <input type="hidden" asp-for="StartDate" />
+    <input type="hidden" asp-for="EndDate" />
+    <input type="hidden" asp-for="AgeRating" />
+</form>
+
+<div id="pageNumberDisplay">
+    <span>
+        @if (Model.PageNumber > 1)
+        {
+            <a href="@Url.Page("./Index", new { pageNumber = Model.PageNumber - 1, searchString = Model.SearchString, movieGenre = Model.MovieGenre, startDate = Model.StartDate, endDate = Model.EndDate, ageRating = Model.AgeRating })" class="button-link">Previous</a>
+        }         
+        @if (Model.AmountOfPages != 0)
+        {
+            <text>Page: <span>@Model.PageNumber</span> / @Model.AmountOfPages</text>
+        }
+        @if (Model.PageNumber < Model.AmountOfPages)
+        {
+            <a href="@Url.Page("./Index", new { pageNumber = Model.PageNumber + 1, searchString = Model.SearchString, movieGenre = Model.MovieGenre, startDate = Model.StartDate, endDate = Model.EndDate, ageRating = Model.AgeRating })" class="button-link">Next</a>
+        }
+    </span>
+</div>
+
+
+<table class="table">
+
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].ReleaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Genre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Movie[0].Rating)
+            </th> 
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Movie)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td> 
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Description" asp-route-id="@item.Id">Description</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
